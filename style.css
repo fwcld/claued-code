@@ -294,8 +294,112 @@ button:disabled { opacity: 0.35; cursor: not-allowed; }
 .session-duration { font-weight: 700; margin-left: auto; font-size: 0.95rem; }
 .session-memo { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
 
+.switch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(108, 99, 255, 0.1);
+  border: 1px solid rgba(108, 99, 255, 0.25);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.switch-arrow { color: var(--text-muted); font-size: 0.7rem; }
+
 .dot-study    { background: var(--cat-study); }
 .dot-work     { background: var(--cat-work); }
 .dot-rest     { background: var(--cat-rest); }
 .dot-exercise { background: var(--cat-exercise); }
 .dot-etc      { background: var(--cat-etc); }
+
+/* Heatmap */
+.heatmap-year { font-size: 0.8rem; font-weight: 400; color: var(--text-muted); margin-left: 8px; }
+
+.heatmap-outer { overflow-x: auto; padding-bottom: 6px; }
+
+.heatmap-months {
+  display: flex;
+  margin-left: 28px;
+  margin-bottom: 4px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  gap: 0;
+}
+
+.heatmap-months span { flex: none; }
+
+.heatmap-body { display: flex; gap: 4px; align-items: flex-start; }
+
+.heatmap-days {
+  display: grid;
+  grid-template-rows: repeat(7, 11px);
+  gap: 3px;
+  padding-top: 1px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  width: 24px;
+  line-height: 11px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 11px);
+  grid-auto-flow: column;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  cursor: default;
+  transition: transform 0.1s;
+  position: relative;
+}
+
+.heatmap-cell:hover { transform: scale(1.4); z-index: 10; }
+
+.heatmap-cell[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  color: #e8eaf6;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+  border: 1px solid var(--border);
+}
+
+/* 5단계 색상: 투명/회색 → 점점 진한 보라 */
+.level-0 { background: var(--surface2); }
+.level-1 { background: rgba(108, 99, 255, 0.22); }
+.level-2 { background: rgba(108, 99, 255, 0.45); }
+.level-3 { background: rgba(108, 99, 255, 0.70); }
+.level-4 { background: #6c63ff; }
+
+/* Legend */
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+.legend-label { font-size: 0.72rem; color: var(--text-muted); }
+
+.legend-cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+}

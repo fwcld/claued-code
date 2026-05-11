@@ -70,6 +70,7 @@ function init() {
   renderGoals();
   renderSessions();
   renderStats();
+  renderHeatmap();
 }
 
 // ── Timer ─────────────────────────────────────────────────────────────────────
@@ -155,6 +156,7 @@ function saveSession() {
   notify('✅ 세션 완료!', `${pendingSession?.category ?? ''} 세션이 기록되었습니다.`);
   renderSessions();
   renderStats();
+  renderHeatmap();
 }
 
 // ── Category selection ────────────────────────────────────────────────────────
@@ -212,6 +214,8 @@ function renderGoals() {
 }
 
 // ── Sessions ──────────────────────────────────────────────────────────────────
+const CAT_EMOJI = { '공부': '📚', '업무': '💼', '휴식': '☕', '운동': '🏃', '기타': '✨' };
+
 function renderSessions() {
   $sessionList.innerHTML = '';
   const todaySessions = sessions.slice().reverse();
@@ -219,17 +223,33 @@ function renderSessions() {
     $sessionList.innerHTML = '<li class="empty-msg">기록이 없습니다.</li>';
     return;
   }
-  todaySessions.forEach(s => {
+  // 시간순(오래된 것 먼저)으로 컨텍스트 스위치 판별 후 역순 렌더링
+  const chron = sessions.slice(); // oldest → newest
+  todaySessions.forEach((s, i) => {
+    const chronIdx = chron.findIndex(x => x.id === s.id);
+    const prev     = chron[chronIdx - 1];
+    const switched = prev && prev.category !== s.category;
+
     const li = document.createElement('li');
     li.className = 'session-item';
     const startStr = new Date(s.startTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
     const endStr   = new Date(s.endTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
     const durStr   = fmtDuration(s.duration);
+
+    const switchBadge = switched
+      ? `<span class="switch-badge">
+           <span style="color:${CAT_COLORS[prev.category] ?? '#a78bfa'}">${CAT_EMOJI[prev.category] ?? ''} ${escHtml(prev.category)}</span>
+           <span class="switch-arrow">→</span>
+           <span style="color:${CAT_COLORS[s.category] ?? '#a78bfa'}">${CAT_EMOJI[s.category] ?? ''} ${escHtml(s.category)}</span>
+         </span>`
+      : '';
+
     li.innerHTML = `
       <div class="session-cat-dot ${CAT_DOT_CLASS[s.category] ?? 'dot-etc'}"></div>
       <div class="session-info">
         <div class="session-header">
-          <span class="session-cat" style="color:${CAT_COLORS[s.category] ?? '#a78bfa'}">${escHtml(s.category)}</span>
+          <span class="session-cat" style="color:${CAT_COLORS[s.category] ?? '#a78bfa'}">${CAT_EMOJI[s.category] ?? ''} ${escHtml(s.category)}</span>
+          ${switchBadge}
           <span class="session-time">${startStr} ~ ${endStr}</span>
           <span class="session-duration">${durStr}</span>
         </div>
@@ -245,6 +265,7 @@ function renderSessions() {
       persistSessions();
       renderSessions();
       renderStats();
+      renderHeatmap();
     });
   });
 }
@@ -304,6 +325,90 @@ function renderStats() {
       },
     });
   }
+}
+
+// ── Heatmap ───────────────────────────────────────────────────────────────────
+function renderHeatmap() {
+  const $grid   = document.getElementById('heatmap-grid');
+  const $months = document.getElementById('heatmap-months');
+  const $year   = document.getElementById('heatmap-year');
+
+  const allSessions = load('fs_sessions', []);
+
+  // 날짜별 총 집중 시간(분) 집계
+  const dayMap = {};
+  allSessions.forEach(s => {
+    dayMap[s.date] = (dayMap[s.date] ?? 0) + Math.floor(s.duration / 60);
+  });
+
+  // 오늘 기준 364일 전(일요일 정렬을 위해 시작 요일 맞춤)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - 364);
+  // 월요일 시작: 시작일을 해당 주의 월요일로 당김
+  const dow = (startDate.getDay() + 6) % 7; // 0=월 … 6=일
+  startDate.setDate(startDate.getDate() - dow);
+
+  $year.textContent = `${startDate.getFullYear()} – ${today.getFullYear()}`;
+
+  // 레벨 결정 (분 기준)
+  const level = min => {
+    if (min === 0)   return 0;
+    if (min <= 30)   return 1;
+    if (min <= 60)   return 2;
+    if (min <= 120)  return 3;
+    return 4;
+  };
+
+  $grid.innerHTML = '';
+  $months.innerHTML = '';
+
+  const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const CELL_SIZE = 11 + 3; // width + gap
+  let monthTrack = -1;
+  let weekIdx = 0;
+  const monthSpans = {}; // month → start weekIdx
+
+  const cursor = new Date(startDate);
+  while (cursor <= today) {
+    const dateStr = cursor.toISOString().slice(0, 10);
+    const min     = dayMap[dateStr] ?? 0;
+    const lv      = level(min);
+    const isFuture = cursor > today;
+
+    const cell = document.createElement('div');
+    cell.className = `heatmap-cell level-${isFuture ? 0 : lv}`;
+    if (!isFuture) {
+      const tipDate = cursor.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+      cell.setAttribute('data-tip', min > 0 ? `${tipDate} · ${min}분` : `${tipDate} · 없음`);
+    }
+    $grid.appendChild(cell);
+
+    // 월 레이블 추적 (매주 첫날 = 월요일 기준)
+    const m = cursor.getMonth();
+    if ((cursor.getDay() + 6) % 7 === 0) { // 월요일
+      if (m !== monthTrack) {
+        monthTrack = m;
+        monthSpans[weekIdx] = MONTHS[m];
+      }
+      weekIdx++;
+    }
+
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  // 월 레이블 렌더링
+  let prevWeek = 0;
+  Object.entries(monthSpans).forEach(([wk, name]) => {
+    const gap = (parseInt(wk) - prevWeek) * CELL_SIZE;
+    const span = document.createElement('span');
+    span.textContent = name;
+    span.style.width = `${gap}px`;
+    span.style.minWidth = `${gap}px`;
+    $months.appendChild(span);
+    prevWeek = parseInt(wk);
+  });
 }
 
 // ── Notifications ─────────────────────────────────────────────────────────────
