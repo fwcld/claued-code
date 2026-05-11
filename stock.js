@@ -63,6 +63,10 @@ function renderSummary() {
   $sumRealized.className   = 'stat-value ' + colorClass(totalRealized);
 }
 
+// ── Validation helpers ────────────────────────────────────────────────────────
+function markInvalid(el) { el.classList.add('input-error'); }
+function clearErrors(...els) { els.forEach(el => el.classList.remove('input-error')); }
+
 // ── Holdings (투자 종목) ───────────────────────────────────────────────────────
 $invAddBtn.addEventListener('click', addHolding);
 [$invName, $invBuy, $invQty, $invCurrent].forEach(el =>
@@ -70,11 +74,18 @@ $invAddBtn.addEventListener('click', addHolding);
 );
 
 function addHolding() {
+  clearErrors($invName, $invBuy, $invQty, $invCurrent);
   const name    = $invName.value.trim();
   const buy     = parseFloat($invBuy.value);
   const qty     = parseInt($invQty.value);
   const current = parseFloat($invCurrent.value);
-  if (!name || isNaN(buy) || isNaN(qty) || isNaN(current) || buy <= 0 || qty <= 0 || current <= 0) return;
+
+  let valid = true;
+  if (!name)              { markInvalid($invName);    valid = false; }
+  if (isNaN(buy)  || buy  <= 0) { markInvalid($invBuy);     valid = false; }
+  if (isNaN(qty)  || qty  <= 0) { markInvalid($invQty);     valid = false; }
+  if (isNaN(current) || current <= 0) { markInvalid($invCurrent); valid = false; }
+  if (!valid) return;
 
   holdings.push({ id: Date.now(), name, buyPrice: buy, qty, currentPrice: current });
   save('st_holdings', holdings);
@@ -176,11 +187,18 @@ $soldAddBtn.addEventListener('click', addSold);
 );
 
 function addSold() {
+  clearErrors($soldName, $soldBuy, $soldSell, $soldQty);
   const name = $soldName.value.trim();
   const buy  = parseFloat($soldBuy.value);
   const sell = parseFloat($soldSell.value);
   const qty  = parseInt($soldQty.value);
-  if (!name || isNaN(buy) || isNaN(sell) || isNaN(qty) || buy <= 0 || qty <= 0) return;
+
+  let valid = true;
+  if (!name)             { markInvalid($soldName); valid = false; }
+  if (isNaN(buy) || buy <= 0) { markInvalid($soldBuy);  valid = false; }
+  if (isNaN(sell))            { markInvalid($soldSell); valid = false; }
+  if (isNaN(qty) || qty <= 0) { markInvalid($soldQty);  valid = false; }
+  if (!valid) return;
 
   sold.push({ id: Date.now(), name, buyPrice: buy, sellPrice: sell, qty, date: new Date().toISOString().slice(0, 10) });
   save('st_sold', sold);

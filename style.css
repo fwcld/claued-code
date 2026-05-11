@@ -538,6 +538,11 @@ button:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .form-field input { width: 100%; }
 
+input.input-error {
+  border-color: var(--danger) !important;
+  background: rgba(255, 92, 122, 0.08);
+}
+
 .form-submit-btn {
   align-self: flex-end;
   padding: 10px 24px;
