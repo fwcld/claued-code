@@ -3,112 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>포커스 세션</title>
+  <title>홈</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <div class="app">
-    <header>
-      <h1>포커스 세션</h1>
-      <p class="date" id="today-date"></p>
-      <label class="notify-toggle">
-        <input type="checkbox" id="notify-toggle" />
-        <span>알림</span>
-      </label>
-    </header>
-
-    <main>
-      <!-- 목표 섹션 -->
-      <section class="card" id="goals-section">
-        <h2>오늘의 목표</h2>
-        <div class="goal-input-row">
-          <input type="text" id="goal-input" placeholder="목표를 입력하세요..." maxlength="80" />
-          <button id="goal-add-btn">추가</button>
+<body class="landing-body">
+  <div class="landing-wrap">
+    <div class="landing-header">
+      <h1 class="landing-title">무엇을 할까요?</h1>
+      <p class="landing-sub">오늘도 집중하고 성장하는 하루를 만들어보세요.</p>
+    </div>
+    <div class="landing-cards">
+      <a href="focus.html" class="landing-card focus-card">
+        <div class="lcard-icon">⏱</div>
+        <div class="lcard-info">
+          <span class="lcard-title">포커스 세션</span>
+          <span class="lcard-desc">공부, 업무, 휴식 시간을 기록하고<br>집중 패턴을 분석해보세요.</span>
         </div>
-        <ul id="goal-list"></ul>
-      </section>
-
-      <!-- 타이머 섹션 -->
-      <section class="card" id="timer-section">
-        <h2>타이머</h2>
-        <div class="category-row" id="category-row">
-          <button class="cat-btn active" data-cat="공부">📚 공부</button>
-          <button class="cat-btn" data-cat="업무">💼 업무</button>
-          <button class="cat-btn" data-cat="휴식">☕ 휴식</button>
-          <button class="cat-btn" data-cat="운동">🏃 운동</button>
-          <button class="cat-btn" data-cat="기타">✨ 기타</button>
+        <span class="lcard-arrow">→</span>
+      </a>
+      <a href="stock.html" class="landing-card stock-card">
+        <div class="lcard-icon">📈</div>
+        <div class="lcard-info">
+          <span class="lcard-title">주식 관리</span>
+          <span class="lcard-desc">투자 종목, 수익률, 관심 종목과<br>실현 손익을 한눈에 관리하세요.</span>
         </div>
-        <div class="timer-display" id="timer-display">00:00:00</div>
-        <div class="pomodoro-row">
-          <label>
-            <input type="checkbox" id="pomodoro-toggle" />
-            뽀모도로 알림 (25분)
-          </label>
-        </div>
-        <div class="timer-controls">
-          <button id="start-btn" class="btn-primary">시작</button>
-          <button id="pause-btn" class="btn-secondary" disabled>일시정지</button>
-          <button id="stop-btn" class="btn-danger" disabled>정지 &amp; 기록</button>
-        </div>
-        <div class="memo-row" id="memo-row" style="display:none;">
-          <input type="text" id="memo-input" placeholder="메모를 남겨보세요... (선택)" maxlength="120" />
-          <button id="save-btn" class="btn-primary">저장</button>
-        </div>
-      </section>
-
-      <!-- 통계 섹션 -->
-      <section class="card" id="stats-section">
-        <h2>오늘의 요약</h2>
-        <div class="stats-grid">
-          <div class="stat-box">
-            <span class="stat-label">총 집중 시간</span>
-            <span class="stat-value" id="total-time">0분</span>
-          </div>
-          <div class="stat-box">
-            <span class="stat-label">완료 세션</span>
-            <span class="stat-value" id="total-sessions">0회</span>
-          </div>
-        </div>
-        <div class="chart-wrap">
-          <canvas id="cat-chart"></canvas>
-          <p class="no-data" id="no-data-msg">아직 기록된 세션이 없습니다.</p>
-        </div>
-      </section>
-
-      <!-- 집중 품질 패턴 (1년 히트맵) -->
-      <section class="card" id="heatmap-section">
-        <h2>집중 품질 패턴 <span class="heatmap-year" id="heatmap-year"></span></h2>
-        <div class="heatmap-outer">
-          <div class="heatmap-months" id="heatmap-months"></div>
-          <div class="heatmap-body">
-            <div class="heatmap-days">
-              <span>월</span><span></span><span>수</span><span></span><span>금</span><span></span><span></span>
-            </div>
-            <div class="heatmap-grid" id="heatmap-grid"></div>
-          </div>
-        </div>
-        <div class="heatmap-legend">
-          <span class="legend-label">적음</span>
-          <div class="legend-cell level-0"></div>
-          <div class="legend-cell level-1"></div>
-          <div class="legend-cell level-2"></div>
-          <div class="legend-cell level-3"></div>
-          <div class="legend-cell level-4"></div>
-          <span class="legend-label">많음</span>
-        </div>
-      </section>
-
-      <!-- 세션 기록 섹션 -->
-      <section class="card" id="sessions-section">
-        <h2>세션 기록</h2>
-        <ul id="session-list">
-          <li class="empty-msg">기록이 없습니다.</li>
-        </ul>
-      </section>
-    </main>
+        <span class="lcard-arrow">→</span>
+      </a>
+    </div>
   </div>
-
-  <script src="app.js"></script>
 </body>
 </html>
