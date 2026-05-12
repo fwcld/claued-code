@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 언어 규칙
+
+모든 응답, 설명, 코드 주석은 **반드시 한국어**로 작성한다.
+
 ## Running the App
 
 No build step or server required. Open any HTML file directly in a browser:
