@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 모든 응답, 설명, 코드 주석은 **반드시 한국어**로 작성한다.
 
+## 커밋 규칙
+
+파일 수정 후 **반드시 즉시 커밋과 푸시를 실행**한다. 작업 완료 후 별도 요청 없이도 자동으로 적용한다.
+
 ## Running the App
 
 No build step or server required. Open any HTML file directly in a browser:
