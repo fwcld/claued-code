@@ -9,6 +9,7 @@
 **"세션 홈"** — 하루를 기록하는 순수 정적 웹앱 (HTML/CSS/Vanilla JS, 빌드 없음)
 
 - GitHub: `https://github.com/fwcld/claued-code.git` (branch: `main`)
+- **배포 URL**: `https://fwcld.github.io/claued-code/` (GitHub Pages)
 - 로컬 경로: `c:\claude\`
 - 브라우저에서 HTML 파일 직접 열어 실행 (서버 불필요)
 - 데이터: `localStorage` 전용 (백엔드 없음)
