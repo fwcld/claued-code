@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>바디 세션</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <a href="index.html" class="back-btn">← 홈</a>
+      <h1 class="body-title">바디 세션</h1>
+      <p class="date" id="today-date"></p>
+    </header>
+
+    <main>
+      <!-- 오늘 요약 -->
+      <section class="card">
+        <h2>오늘 요약</h2>
+        <div class="calorie-goal-row">
+          <label class="goal-label">목표 칼로리</label>
+          <div class="goal-input-wrap">
+            <input type="number" id="goal-calories" placeholder="2000" min="100" max="9999" />
+            <span class="unit">kcal</span>
+          </div>
+        </div>
+        <div class="stats-grid four-col">
+          <div class="stat-box">
+            <span class="stat-label">섭취 칼로리</span>
+            <span class="stat-value intake-val" id="total-intake">0 kcal</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">소모 칼로리</span>
+            <span class="stat-value burn-val" id="total-burn">0 kcal</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">순 칼로리</span>
+            <span class="stat-value" id="net-calories">0 kcal</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">총 런닝</span>
+            <span class="stat-value run-val" id="total-run">0 km</span>
+          </div>
+        </div>
+        <div class="calorie-bar-wrap">
+          <div class="calorie-bar-track">
+            <div class="calorie-bar-fill" id="calorie-bar"></div>
+          </div>
+          <span class="calorie-bar-label" id="calorie-bar-label">목표 대비 0%</span>
+        </div>
+      </section>
+
+      <!-- 식사 기록 -->
+      <section class="card">
+        <h2>식사 기록</h2>
+        <div class="stock-form">
+          <div class="meal-type-row" id="meal-type-row">
+            <button class="meal-type-btn active" type="button" data-type="아침">🌅 아침</button>
+            <button class="meal-type-btn" type="button" data-type="점심">☀️ 점심</button>
+            <button class="meal-type-btn" type="button" data-type="저녁">🌙 저녁</button>
+            <button class="meal-type-btn" type="button" data-type="간식">🍪 간식</button>
+          </div>
+          <div class="stock-form-fields two-col">
+            <div class="form-field">
+              <label>음식명</label>
+              <input type="text" id="meal-name" placeholder="예) 닭가슴살 샐러드" maxlength="40" />
+            </div>
+            <div class="form-field">
+              <label>칼로리 (kcal)</label>
+              <input type="number" id="meal-cal" placeholder="0" min="0" />
+            </div>
+          </div>
+          <button id="meal-add-btn" type="button" class="btn-primary form-submit-btn">+ 식사 추가</button>
+        </div>
+        <ul id="meal-list">
+          <li class="empty-msg">오늘 식사 기록이 없습니다.</li>
+        </ul>
+      </section>
+
+      <!-- 운동 기록 -->
+      <section class="card">
+        <h2>운동 기록</h2>
+        <div class="stock-form">
+          <div class="stock-form-fields">
+            <div class="form-field">
+              <label>운동 종류</label>
+              <select id="exercise-type">
+                <option value="런닝">🏃 런닝</option>
+                <option value="걷기">🚶 걷기</option>
+                <option value="사이클">🚴 사이클</option>
+                <option value="수영">🏊 수영</option>
+                <option value="웨이트">🏋️ 웨이트</option>
+                <option value="기타">✨ 기타</option>
+              </select>
+            </div>
+            <div class="form-field" id="distance-field">
+              <label>거리 (km)</label>
+              <input type="number" id="exercise-dist" placeholder="0.0" min="0" step="0.1" />
+            </div>
+            <div class="form-field">
+              <label>소모 칼로리 (kcal)</label>
+              <input type="number" id="exercise-cal" placeholder="자동 계산" min="0" />
+            </div>
+            <div class="form-field">
+              <label>메모 (선택)</label>
+              <input type="text" id="exercise-memo" placeholder="예) 한강 코스" maxlength="40" />
+            </div>
+          </div>
+          <button id="exercise-add-btn" type="button" class="btn-primary form-submit-btn">+ 운동 추가</button>
+        </div>
+        <ul id="exercise-list">
+          <li class="empty-msg">오늘 운동 기록이 없습니다.</li>
+        </ul>
+      </section>
+
+      <!-- 오늘 타임라인 -->
+      <section class="card">
+        <h2>오늘 타임라인</h2>
+        <ul id="timeline-list">
+          <li class="empty-msg">기록이 없습니다.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script src="weight.js"></script>
+</body>
+</html>
